@@ -8,7 +8,6 @@ public class Arrow {
   }
   
   void display() {
-    fill(0);
     triangle(vertexes[0].x, vertexes[0].y,
              vertexes[1].x, vertexes[1].y, 
              vertexes[2].x, vertexes[2].y);
@@ -21,7 +20,6 @@ public class Arrow {
       ver.set(x, y);
     }
   }
-  
   void translate(float x, float y) {
     for (PVector ver: vertexes) {
       ver.add(x, y);
