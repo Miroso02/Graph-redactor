@@ -17,7 +17,6 @@ public class Vertex {
     displayLinks();
 
     fill(255);
-    strokeWeight(1);
     stroke(0);
     circle(position, VERTEX_DIAMETER);
     fill(0);
@@ -29,14 +28,14 @@ public class Vertex {
       linked.add(link);
     }
   }
-
+  
   void move() {
     if (mousePressed) {
       if (sq(mouseX - position.x) + sq(mouseY - position.y) < sq(VERTEX_DIAMETER)) {
         if (chosen == null) chosen = this;
         if (chosen != this) return;
         position.add(mouseX - pmouseX, mouseY - pmouseY);
-      }
+      } 
     } else chosen = null;
   }
 
@@ -112,7 +111,10 @@ public class Vertex {
     vertexes.get(12).position.set(-100, 0);
     PVector lastPoint = findIntersectPoint(startPoint, endPoint);
     points.add(lastPoint);
-    drawArrow(points);
+    
+    boolean blueArr = (graph == chosen
+                    && graph != this);
+    drawArrow(points, blueArr);
   }
 
   private Vertex linkTouchVertex(PVector pos0, PVector pos1) {
@@ -132,12 +134,11 @@ public class Vertex {
       float dist = 
         abs(other.position.x * (pos1.y - pos0.y) + other.position.y * (pos0.x - pos1.x) + pos0.y * pos1.x - pos0.x * pos1.y)
         / sqrt(sq(pos1.x - pos0.x) + sq(pos1.y - pos0.y));
-      if (dist < VERTEX_DIAMETER / 2/* && dist > 0*/ && distToVertex < leastDist) {
+      if (dist < VERTEX_DIAMETER / 2 && distToVertex < leastDist) {
         intersected = other;
         leastDist = distToVertex;
       }
     }
-    //if (intersected != null && this.value == 3) println(intersected.value);
     return intersected;
   }
   
@@ -156,11 +157,17 @@ public class Vertex {
     float y = (p1.y * r + p2.y * (dist - r)) / dist;
     return new PVector(x, y);
   }
-  void drawArrow(ArrayList<PVector> points) {
+  void drawArrow(ArrayList<PVector> points, boolean blue) {
+    color arrCol = color(0);
     if (chosen == this) {
-      stroke(255, 0, 0);
-      fill(255, 0, 0);
+      arrCol = color(255, 0, 0);
     }
+    if (blue) {
+      arrCol = DIRECTED ? color(0, 0, 255) :
+                          color(255, 0, 0);
+    }
+    stroke(arrCol);
+    fill(arrCol);
     for (int i = 0; i < points.size() - 1; i++) {
       line(points.get(i), points.get(i + 1));
     }

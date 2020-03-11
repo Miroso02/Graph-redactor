@@ -1,5 +1,6 @@
 ArrayList<Vertex> vertexes = new ArrayList<Vertex>();;
 Vertex chosen;
+GraphController gc = new GraphController();
 final int GRAPH_COUNT = 12;
 final boolean DIRECTED = true;
 final int VERTEX_DIAMETER = 80;
@@ -8,7 +9,7 @@ void setup() {
   size(displayWidth, displayHeight);
   textSize(40);
   textAlign(CENTER, CENTER);
-  strokeWeight(1);
+  strokeWeight(2);
   stroke(0);
   randomSeed(9323);
   
@@ -45,10 +46,12 @@ void draw() {
     vertexes.get(i).display();
     vertexes.get(i).move();
   }
+  if (chosen != null) gc.displayInfo();
+  gc.writeGraphIsRegular();
 }
 
 void setLinks() {
-  final float A = 1 - 0.25 - 2 * 0.02 - 3 * 0.005;
+  final float A = 1 - 0.3 - 2 * 0.01 - 3 * 0.01;
   
   int[][] matrix = new int[GRAPH_COUNT][GRAPH_COUNT];
   for (int i = 0; i < GRAPH_COUNT; i++) {
@@ -88,6 +91,8 @@ void setLinks() {
       if (matrix[i][j] == 1) vertexes.get(i).addLinks(vertexes.get(j));
     }
   }
+  //vertexes.get(9).linked.remove(1);
+  //vertexes.get(9).linked.remove(0);
 }
 
 void circle(PVector position, int size) {
