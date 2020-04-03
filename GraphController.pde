@@ -3,23 +3,54 @@ class GraphController {
   
   void displayInfo() {
     fill(0);
+    textSize(40);
     text("Вершина " + chosen.value, width / 2, 800);
     int power = 0;
     int in = 0;
     int out = 0;
-    for (Vertex v: chosen.linked) out++;
+    for (Link l: chosen.links) out++;
     for (Vertex v: vertexes) {
-      for (Vertex link: v.linked) {
-        if (link == chosen) in++;
-      }
+      if (v.getLinkTo(chosen) != null) in++;
     }
     power = in + out;
-    if (DIRECTED) {
-      fill(255, 0, 0);
-      text("Вихід " + out, width / 4 - 50, 800);
-      fill(0, 0, 255);
-      text("Захід " + in, 3 * width / 4 + 50, 800);
-      fill(0);
+    switch (linkLength.state) 
+    {
+      case 0:
+        if (DIRECTED) 
+        {
+          fill(255, 0, 0);
+          text("Вихід " + out, width / 4 - 50, 800);
+          fill(0, 0, 255);
+          text("Захід " + in, 3 * width / 4 + 50, 800);
+          fill(0);
+        }
+        break;
+      case 1:
+        fill(0);
+        textSize(30);
+        for (int i = 0; i < chosen.paths2.size(); i++)
+        {
+          String text = "";
+          for (int a: chosen.paths2.get(i))
+          {
+            text = text + a + " ";
+          }
+          text(text, 100, height / 2 + 270 + 35 * i);
+        }
+        break;
+      case 2:
+        fill(0);
+        textSize(30);
+        for (int i = 0; i < chosen.paths3.size(); i++)
+        {
+          String text = "";
+          for (int a: chosen.paths3.get(i))
+          {
+            text = text + a + " ";
+          }
+          text(text, 100, height / 2 + 270 + 35 * i);
+        }
+        break;
     }
     text("Степінь " + power, width / 2, 850);
     if (power == 0) text("Ізольована", width / 2, 900);
@@ -32,11 +63,9 @@ class GraphController {
     for (int i = 0; i < vertexes.size(); i++) {
       int in = 0;
       int out = 0;
-      for (Vertex v: vertexes.get(i).linked) out++;
+      for (Link l: vertexes.get(i).links) out++;
       for (Vertex v: vertexes) {
-        for (Vertex link: v.linked) {
-          if (link == vertexes.get(i)) in++;
-        }
+        if (v.getLinkTo(vertexes.get(i)) != null) in++;
       }
       powers[i] = in + out;
     }
