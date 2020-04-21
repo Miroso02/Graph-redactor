@@ -1,5 +1,5 @@
 void setLinks() {
-  final float A = 1 - 0.27 - 2 * 0.005 - 3 * 0.005;
+  final float A = 1 - 0.28 - 2 * 0.01 - 3 * 0.005;
   
   int[][] matrix = new int[GRAPH_COUNT][GRAPH_COUNT];
   int[][] matrixLen2 = new int[GRAPH_COUNT][GRAPH_COUNT];

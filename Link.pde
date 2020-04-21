@@ -3,12 +3,14 @@ public class Link
   Vertex start;
   Vertex end;
   color col;
+  int opp;
   
   public Link(Vertex start, Vertex end)
   {
     this.start = start;
     this.end = end;
     col = color(0);
+    opp = 255;
   }
   
   public void setColor(int r, int g, int b)
@@ -141,8 +143,16 @@ public class Link
                          color(255, 0, 0);
     }
     if (chosen != null) chosen.colorizePaths();
-    stroke(col);
-    fill(col);
+    if (travel.state == 1)
+    {
+      if (queue.contains(this))
+      {
+        opp = 255;
+        col = color(255, 100, 100);
+      }
+    }
+    stroke(col, opp);
+    fill(col, opp);
     for (int i = 0; i < points.size() - 1; i++) {
       line(points.get(i), points.get(i + 1));
     }

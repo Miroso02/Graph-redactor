@@ -3,6 +3,8 @@ ArrayList<Vertex> condensVert = new ArrayList<Vertex>();
 Vertex chosen;
 Switch linkLength;
 Switch moveVertex;
+Switch travel;
+Switch next;
 GraphController gc = new GraphController();
 final int GRAPH_COUNT = 12;
 final boolean DIRECTED = true;
@@ -29,7 +31,7 @@ void setup() {
   moveVertex.setPosition(width - 100, height / 2 + 200);
   moveVertex.setDimensions(180, 70);
   moveVertex.setColors(color(255, 0, 0), color(0, 255, 0));
-  moveVertex.setText("Переміс����ити");
+  moveVertex.setText("Перемістити");
   
   for (int i = 0; i < 4; i++) {
     float x = width / 2 - 240 + 160 * i;
@@ -55,6 +57,12 @@ void setup() {
   vertexes.add(new Vertex(0, 0, 0));
   
   setLinks();
+  travel = new Switch(2);
+  travel.setPosition(width / 2, height / 2 + 350);
+  travel.setText("Обхід графа");
+  next = new Switch(1);
+  next.setPosition(width - 200, height - 100);
+  next.setText("Крок");
 }
 
 //------------------------------------------------------

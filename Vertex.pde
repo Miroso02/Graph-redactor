@@ -1,5 +1,7 @@
 public class Vertex {
   int value;
+  color col;
+  int opp;
   PVector position;
   ArrayList<Link> links = new ArrayList<Link>();
   ArrayList<ArrayList<Integer>> paths2 = new ArrayList<ArrayList<Integer>>();
@@ -8,20 +10,24 @@ public class Vertex {
   public Vertex(int value, float x, float y) {
     this.value = value;
     position = new PVector(x, y);
+    col = color(255);
+    opp = 255;
   }
   public Vertex(int value, PVector position) {
     this.value = value;
     this.position = position.copy();
+    col = color(255);
+    opp = 255;
   }
 
   void display() {
     for (Link l: links)
       l.display();
-    fill(255);
-    stroke(0);
+    fill(col, opp);
+    stroke(0, opp);
     circle(position, VERTEX_DIAMETER);
     
-    fill(0);
+    fill(0, opp);
     textSize(40);
     text(value, position.x, position.y);
   }
@@ -103,5 +109,10 @@ public class Vertex {
     for (Link l: links) 
       if (l.end == v) return l;
     return null;
+  }
+  
+  public void setColor(int r, int g, int b)
+  {
+    col = color(r, g, b);
   }
 }
