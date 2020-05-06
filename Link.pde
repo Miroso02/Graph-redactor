@@ -4,13 +4,17 @@ public class Link
   Vertex end;
   color col;
   int opp;
+  int weight;
+  float koef;
   
   public Link(Vertex start, Vertex end)
   {
     this.start = start;
     this.end = end;
+    weight = int(random(10));
     col = color(0);
     opp = 255;
+    koef = random(0.7, 3);
   }
   
   public void setColor(int r, int g, int b)
@@ -147,8 +151,18 @@ public class Link
     {
       if (queue.contains(this))
       {
+        opp = 160;
+        col = color(0, 130, 130);
+      }
+      if (basis.contains(this))
+      {
         opp = 255;
         col = color(255, 100, 100);
+      }
+      if (basis.size() > 0 && basis.get(basis.size() - 1) == this)
+      {
+        opp = 255;
+        col = color(0, 100, 255);
       }
     }
     stroke(col, opp);
@@ -165,5 +179,21 @@ public class Link
     else arr.rotate(PI + atan(k));
     arr.translate(pLast.x, pLast.y);
     if (DIRECTED) arr.display();
+    
+    if (chosen == start || chosen == end
+     || queue.contains(this) || basis.contains(this))
+    {
+      textSize(25);
+      if (points.size() > 2)
+      {
+        int a = int(koef / 5 * points.size());
+        
+        text(weight, (points.get(a).x + koef * points.get(a + 1).x) / (1 + koef),
+                     (points.get(a).y + koef * points.get(a + 1).y) / (1 + koef));
+      }
+      else
+        text(weight, (start.position.x + koef * end.position.x) / (1 + koef),
+                     (start.position.y + koef * end.position.y) / (1 + koef));
+    }
   }
 }

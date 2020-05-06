@@ -7,7 +7,7 @@ Switch travel;
 Switch next;
 GraphController gc = new GraphController();
 final int GRAPH_COUNT = 12;
-final boolean DIRECTED = true;
+final boolean DIRECTED = false;
 final int VERTEX_DIAMETER = 80;
 
 void setup() {
@@ -59,7 +59,8 @@ void setup() {
   setLinks();
   travel = new Switch(2);
   travel.setPosition(width / 2, height / 2 + 350);
-  travel.setText("Обхід графа");
+  travel.setDimensions(280, 100);
+  travel.setText("Побудувати кістяк");
   next = new Switch(1);
   next.setPosition(width - 200, height - 100);
   next.setText("Крок");

@@ -1,5 +1,5 @@
 void setLinks() {
-  final float A = 1 - 0.28 - 2 * 0.01 - 3 * 0.005;
+  final float A = 1 - 0.25 - 2 * 0.01 - 3 * 0.005;
   
   int[][] matrix = new int[GRAPH_COUNT][GRAPH_COUNT];
   int[][] matrixLen2 = new int[GRAPH_COUNT][GRAPH_COUNT];
@@ -35,96 +35,54 @@ void setLinks() {
   }
   
   for (int i = 0; i < GRAPH_COUNT; i++) {
+    matrix[i][i] = 0;
+  }
+  
+  ///
+  
+  int[][] triangle = new int[GRAPH_COUNT][GRAPH_COUNT];
+  int[][] Wt = new int[GRAPH_COUNT][GRAPH_COUNT];
+  int[][] W = new int[GRAPH_COUNT][GRAPH_COUNT];
+  boolean[][] B = new boolean[GRAPH_COUNT][GRAPH_COUNT];
+  
+  for (int j = 0; j < GRAPH_COUNT; j++) {
+    for (int i = j - 1; i >= 0; i--) {
+      triangle[i][j] = 1;
+    }
+  }
+
+  for (int j = 0; j < GRAPH_COUNT; j++) {
+    for (int i = 0; i < GRAPH_COUNT; i++) {
+      Wt[i][j] = (int) random(100) * matrix[i][j];
+    }
+  }
+
+  for (int j = 0; j < GRAPH_COUNT; j++) {
+    for (int i = 0; i < GRAPH_COUNT; i++) {
+      B[i][j] = bool(Wt[i][j]);
+    }
+  }
+
+  for (int j = 0; j < GRAPH_COUNT; j++) {
+    for (int i = 0; i < GRAPH_COUNT; i++) {
+      Wt[i][j] = integ(B[i][j] && !B[j][i] || B[i][j] && B[j][i]) * triangle[i][j] * Wt[i][j];
+    }
+  }
+
+  for (int j = 0; j < GRAPH_COUNT; j++) {
+    println();
+    for (int i = 0; i < GRAPH_COUNT; i++) {
+      W[i][j] = Wt[i][j] + Wt[j][i];
+      print(W[i][j] + " ");
+    }
+  }
+  
+  println();
+  for (int i = 0; i < GRAPH_COUNT; i++) {
     println();
     for (int j = 0; j < GRAPH_COUNT; j++) {
       print(matrix[i][j] + " ");
-      if (matrix[i][j] == 1) vertexes.get(i).addLinks(vertexes.get(j));
-    }
-  }
-  
-  //---------- Other matrices ------------------
-  
-  for (Vertex v: vertexes)
-  {
-    v.findPathsWithLength(v.paths2, new ArrayList<Integer>(), 2, v);
-    v.findPathsWithLength(v.paths3, new ArrayList<Integer>(), 3, v);
-  }
-  matrixLen2 = mult(matrix, matrix);
-  matrixLen3 = mult(matrixLen2, matrix);
-  println("\nШляхи довжиною 2:");
-  for (int i = 0; i < GRAPH_COUNT; i++) {
-    println();
-    for (int j = 0; j < GRAPH_COUNT; j++) {
-      print(matrixLen2[i][j] + " ");
-    }
-  }
-  println("\nШляхи довжиною 3:");
-  for (int i = 0; i < GRAPH_COUNT; i++) {
-    println();
-    for (int j = 0; j < GRAPH_COUNT; j++) {
-      print(matrixLen3[i][j] + " ");
-    }
-  }
-  int[][] accessMatrix 
-      = add(add(matrix, matrixLen2), matrixLen3);
-  for(int i = 0; i < GRAPH_COUNT; i++) {
-    accessMatrix[i][i]++;
-  }
-  for (int i = 0; i < 8; i++)
-  {
-    matrixLen3 = mult(matrixLen3, matrix);
-    accessMatrix = add(accessMatrix, matrixLen3);
-  }
-  println("\nМатриця досяжності:");
-  for (int i = 0; i < GRAPH_COUNT; i++) {
-    println();
-    for (int j = 0; j < GRAPH_COUNT; j++) {
-      print(accessMatrix[i][j] + " ");
-    }
-  }
-  int[][] transponedAcMatrix = new int[GRAPH_COUNT][GRAPH_COUNT];
-  for (int i = 0; i < GRAPH_COUNT; i++) {
-    for (int j = 0; j < GRAPH_COUNT; j++) {
-      transponedAcMatrix[i][j] = accessMatrix[j][i];
-    }
-  }
-  println("\nМатриця зв'язності:");
-  for (int i = 0; i < GRAPH_COUNT; i++) {
-    println();
-    for (int j = 0; j < GRAPH_COUNT; j++) {
-      transponedAcMatrix[i][j] *= accessMatrix[i][j];
-      print(transponedAcMatrix[i][j] + " ");
-    }
-  }
-  
-  ArrayList<int[]> connectedComponents = new ArrayList<int[]>();
-  for (int i = 0; i < GRAPH_COUNT; i++) {
-    boolean newL = true;
-    for (int[] line: connectedComponents) {
-      if (equals(transponedAcMatrix[i], line)) {
-        newL = false;
-        break;
-      }
-    }
-    if (newL) connectedComponents.add(transponedAcMatrix[i]);
-  }
-  
-  for (int i = 0; i < connectedComponents.size(); i++) {
-    condensVert.add(new Vertex(i + 1, width - 150, height / 2 + 370 + 150 * i));
-  }
-  for (int i = 0; i < connectedComponents.size(); i++) {
-    for (int j = i + 1; j < connectedComponents.size(); j++) {
-      int a = -1, b = -1;
-      for (int k = 0; k < GRAPH_COUNT; k++) {
-        if (a == -1 && connectedComponents.get(i)[k] == 1)
-          a = k;
-        if (b == -1 && connectedComponents.get(j)[k] == 1)
-          b = k;
-      }
-      if (accessMatrix[a][b] == 1)
-        condensVert.get(i).addLinks(condensVert.get(j));
-      else if (accessMatrix[b][a] == 1)
-        condensVert.get(j).addLinks(condensVert.get(i));
+      if (matrix[i][j] == 1) vertexes.get(i).addLink(vertexes.get(j), W[i][j]);
     }
   }
 }
@@ -134,4 +92,11 @@ boolean equals(int[] a, int[] b) {
     if (a[i] != b[i]) return false;
   }
   return true;
+}
+
+boolean bool(int a) {
+  return a != 0;
+}
+int integ(boolean a) {
+  return a ? 1 : 0;
 }

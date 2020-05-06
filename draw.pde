@@ -6,19 +6,33 @@ void draw() {
     if (moveVertex.state == 0 && travel.state == 0)
       vertexes.get(i).select();
   }
-  /*text("Граф конденсації:", width - 200, height / 2 + 300);
-  text("1-7 9-12", width - 270, height / 2 + 370);
-  text("8", width - 250, height / 2 + 520);
-  for (Vertex v: condensVert) {
-    v.display();
-  }*/
   
   travel.display();
   if (travel.press())
   {
     travelIndex = 0;
+    if (basis.size() > 0)
+    {
+      int[][] basisMatrix = new int[GRAPH_COUNT][GRAPH_COUNT];
+      for (Link l: basis)
+      {
+        int a = l.start.value - 1;
+        int b = l.end.value - 1;
+        basisMatrix[a][b] = 1;
+        basisMatrix[b][a] = 1;
+      }
+      println();
+      for (int i = 0; i < GRAPH_COUNT; i++) {
+        println();
+        for (int j = 0; j < GRAPH_COUNT; j++) {
+          print(basisMatrix[i][j] + " ");
+        }
+      }
+    }
     queue = new ArrayList<Link>();
     visited = new ArrayList<Vertex>();
+    basis = new ArrayList<Link>();
+    chosen = null;
     for (Vertex v: vertexes)
     {
       if (v.links.size() > 0)
@@ -55,6 +69,10 @@ void draw() {
         for(Link l: v.links)
           l.opp = 255;
       }
+      
+      queue = new ArrayList<Link>();
+      visited = new ArrayList<Vertex>();
+      basis = new ArrayList<Link>();
     }
   }
   if (travel.state == 1)
@@ -71,7 +89,8 @@ void draw() {
     textAlign(CENTER, CENTER);
     if (travelIndex >= queue.size())
     {
-      text("Обхід завершено", width / 2, height / 2 + 120);
+      //queue.add(new Link(null, null));
+      text("Кістяк побудовано", width / 2, height / 2 + 120);
     }
     next.display();
     if (next.press())
@@ -81,12 +100,20 @@ void draw() {
         v.opp = 255;
         v.setColor(255, 100, 100);
       }
-      for (Link l: queue)
-        l.opp = 255;
-      if (!travelGraph()) 
+      
+      ArrayList<Link> uselessLinks = new ArrayList<Link>();
+      for (Link link: queue)
       {
-        
+        if (visited.contains(link.start) 
+         && visited.contains(link.end))
+          uselessLinks.add(link);
       }
+      for (Link l: uselessLinks)
+      {
+        l.opp = 30;
+        queue.remove(l);
+      }
+      travelBasis();
        // travel.state = 0;
     }
     return;
@@ -94,9 +121,9 @@ void draw() {
   
   if (chosen != null) 
   {
-    linkLength.display();
+    /*linkLength.display();
     if (linkLength.press())
-      linkLength.setText("Шляхи \n довжиною " + (linkLength.state + 1));
+      linkLength.setText("Шляхи \n довжиною " + (linkLength.state + 1));*/
     moveVertex.update();
     gc.displayInfo();
     

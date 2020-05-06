@@ -38,6 +38,12 @@ public class Vertex {
     }
   }
   
+  void addLink(Vertex vertex, int weight) {
+    Link newL = new Link(this, vertex);
+    newL.weight = weight;
+    links.add(newL);
+  }
+  
   void move() {
     if (mousePressed) {
       if (sq(mouseX - position.x) + sq(mouseY - position.y) < sq(VERTEX_DIAMETER)) {
