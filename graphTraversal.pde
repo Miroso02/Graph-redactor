@@ -1,6 +1,9 @@
 ArrayList<Vertex> visited = new ArrayList<Vertex>();
 ArrayList<Link> queue = new ArrayList<Link>();
 ArrayList<Link> basis = new ArrayList<Link>();
+ArrayList<Vertex> vertexQueue = new ArrayList<Vertex>();
+Vertex chosenVert, changedVert;
+Link currentLink;
 int travelIndex = 0;
 int opp = 0;
 public boolean travelGraph()
@@ -63,4 +66,40 @@ public boolean travelBasis()
     queue.remove(chosen);
     return true;
   }
+}
+
+public void findShortestPath()
+{
+  if (queue.size() == 0)
+  {
+    currentLink = null;
+    if (chosenVert != null) {
+      visited.add(chosenVert);
+      chosenVert.setColor(255, 255, 255);
+    }
+    chosenVert = vertexQueue.get(travelIndex++);
+    chosenVert.setColor(150, 150, 255);
+    for (Vertex v: vertexes)
+      for (Link l: v.links)
+        if (l.start == chosenVert && !visited.contains(l.end)
+         || l.end == chosenVert && !visited.contains(l.start))
+          queue.add(l);
+    return;
+  }
+  currentLink = queue.get(0);
+  for (Link l: queue)
+  {
+    if (currentLink == null || l.weight < currentLink.weight)
+      currentLink = l;
+  }
+  Vertex nextV = chosenVert == currentLink.start ? currentLink.end : currentLink.start;
+  if (!vertexQueue.contains(nextV))
+    vertexQueue.add(nextV);
+  int len = chosenVert.pathLength + currentLink.weight;
+  if (len < nextV.pathLength)
+  {
+    nextV.pathLength = len;
+    changedVert = nextV;
+  }
+  queue.remove(currentLink);
 }

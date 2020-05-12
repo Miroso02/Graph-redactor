@@ -14,7 +14,7 @@ public class Link
     weight = int(random(10));
     col = color(0);
     opp = 255;
-    koef = random(0.7, 3);
+    koef = random(0.6, 1.7);
   }
   
   public void setColor(int r, int g, int b)
@@ -151,8 +151,13 @@ public class Link
     {
       if (queue.contains(this))
       {
-        opp = 160;
-        col = color(0, 130, 130);
+        opp = 255;
+        col = color(150, 0, 255);
+      }
+      if (currentLink == this)
+      {
+        opp = 255;
+        col = color(255, 0, 0);
       }
       if (basis.contains(this))
       {
@@ -181,12 +186,12 @@ public class Link
     if (DIRECTED) arr.display();
     
     if (chosen == start || chosen == end
-     || queue.contains(this) || basis.contains(this))
+     || queue.contains(this) || currentLink == this)
     {
       textSize(25);
       if (points.size() > 2)
       {
-        int a = int(koef / 5 * points.size());
+        int a = int(points.size() - 1 - koef);
         
         text(weight, (points.get(a).x + koef * points.get(a + 1).x) / (1 + koef),
                      (points.get(a).y + koef * points.get(a + 1).y) / (1 + koef));

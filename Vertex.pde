@@ -3,6 +3,7 @@ public class Vertex {
   color col;
   int opp;
   PVector position;
+  int pathLength;
   ArrayList<Link> links = new ArrayList<Link>();
   ArrayList<ArrayList<Integer>> paths2 = new ArrayList<ArrayList<Integer>>();
   ArrayList<ArrayList<Integer>> paths3 = new ArrayList<ArrayList<Integer>>();
@@ -12,12 +13,14 @@ public class Vertex {
     position = new PVector(x, y);
     col = color(255);
     opp = 255;
+    pathLength = 1000;
   }
   public Vertex(int value, PVector position) {
     this.value = value;
     this.position = position.copy();
     col = color(255);
     opp = 255;
+    pathLength = 1000;
   }
 
   void display() {
@@ -30,6 +33,15 @@ public class Vertex {
     fill(0, opp);
     textSize(40);
     text(value, position.x, position.y);
+    
+    if (travel.state == 1)
+    {
+      fill(0, 0, 255, opp);
+      if (changedVert == this)
+        fill(255, 0, 0);
+      textSize(30);
+      text(pathLength, position.x, position.y - 55);
+    }
   }
 
   void addLinks(Vertex ...newLinks) {

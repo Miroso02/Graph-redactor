@@ -59,8 +59,8 @@ void setup() {
   setLinks();
   travel = new Switch(2);
   travel.setPosition(width / 2, height / 2 + 350);
-  travel.setDimensions(280, 100);
-  travel.setText("Побудувати кістяк");
+  travel.setDimensions(380, 100);
+  travel.setText("Знайти найкоротші шляхи \n від обраної вершини");
   next = new Switch(1);
   next.setPosition(width - 200, height - 100);
   next.setText("Крок");
